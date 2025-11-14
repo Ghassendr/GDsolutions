@@ -1,0 +1,40 @@
+<nav class="nav-container">
+        <div class="logo">
+            <svg width="45" height="45" viewBox="0 0 45 45" class="logo-svg">
+                <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00d4ff"/>
+                        <stop offset="50%" style="stop-color:#7c3aed"/>
+                        <stop offset="100%" style="stop-color:#ec4899"/>
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <path d="M22.5 5L40 15V30L22.5 40L5 30V15L22.5 5Z" fill="none" stroke="url(#logoGradient)" stroke-width="2.5" filter="url(#glow)"/>
+                <circle cx="22.5" cy="22.5" r="4" fill="url(#logoGradient)" filter="url(#glow)"/>
+                <path d="M22.5 15v15M15 22.5h15" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6"/>
+            </svg>
+            <span class="logo-text">GD Solutions</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="GDsolutions.html#accueil" class="nav-link" data-page="home">Accueil</a></li>
+            <li><a href="GDsolutions.html#apropos" class="nav-link">À propos</a></li>
+         
+            <li><a href="services.html" class="nav-link" data-page="services">Services Détaillés</a></li>
+            <li><a href="portfolio.html" class="nav-link" data-page="portfolio">Portfolio</a></li>
+            
+            <li><a href="index2.html#equipe" class="nav-link">Équipe</a></li>
+            <li><a href="index2.html#contact" class="nav-link">Contact</a></li>
+        </ul>
+    <button class="cta-header" data-modal-trigger aria-haspopup="dialog">Démarrer</button>
+        <button class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
