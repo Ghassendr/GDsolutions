@@ -398,6 +398,17 @@
 
 .form-error { color: #ffb3b3; margin-top: 0.4rem; font-size: 0.9rem; }
 
+/* Inline form message (success / error) shown after AJAX submit */
+.form-message {
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.form-message.success { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.18); }
+.form-message.error { background: rgba(239,68,68,0.08); color: #ef4444; border: 1px solid rgba(239,68,68,0.12); }
+
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 2000; }
 .modal.open { display: flex; }
 .modal .modal-panel { background: var(--bg-card); padding: 2rem; border-radius: 12px; max-width: 720px; width: 100%; box-shadow: var(--shadow-lg); }

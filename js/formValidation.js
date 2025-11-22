@@ -1,7 +1,4 @@
-/**
- * Form validation module
- * Provides client-side form validation with error display
- */
+
 export function initFormValidation(selector = '#contactForm') {
     const form = document.querySelector(selector);
     if (!form) {
@@ -46,14 +43,52 @@ export function initFormValidation(selector = '#contactForm') {
             }
         });
 
+       
         if (!valid) {
             e.preventDefault();
             const firstError = form.querySelector('[aria-invalid="true"]');
             if (firstError) firstError.focus();
+            return;
         }
+
+       e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnHtml = submitBtn && submitBtn.innerHTML;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Envoi...';
+        }
+
+        const fd = new FormData(form);
+
+        fetch(form.action || 'php/contact.php', {
+            method: 'POST',
+            body: fd,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(async (res) => {
+            let data = {};
+            try { data = await res.json(); } catch (err) {}
+            if (res.ok && data && (data.success || !data.error)) {
+                alert(data.success || 'Message envoyé avec succès !');
+                form.reset();
+            } else {
+                const errMsg = data && data.error ? data.error : 'Erreur lors de l\'envoi. Veuillez réessayer.';
+                alert(errMsg);
+            }
+        }).catch((err) => {
+            console.error('Contact form submit failed', err);
+            alert('Erreur réseau. Vérifiez votre connexion et réessayez.');
+        }).finally(() => {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                if (originalBtnHtml) submitBtn.innerHTML = originalBtnHtml;
+            }
+        });
     });
 
-    // live validation
+    
     form.querySelectorAll('[data-required]').forEach(input => {
         input.addEventListener('input', () => clearError(input));
     });
