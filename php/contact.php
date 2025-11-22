@@ -1,62 +1,56 @@
+
 <?php
 header('Content-Type: application/json');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     echo json_encode(["error" => "Méthode non autorisée"]);
     exit;
 }
-
 $name     = trim($_POST["name"] ?? "");
-$email    = trim($_POST["email"] ?? "");
+$email    = trim($_POST["email"] ?? ""); 
 $service  = trim($_POST["service"] ?? "");
 $message  = trim($_POST["message"] ?? "");
 $company  = trim($_POST["company"] ?? "");
 $phone    = trim($_POST["phone"] ?? "");
 $budget   = trim($_POST["budget"] ?? "");
-
  
 if ($name === "" || $email === "" || $service === "" || $message === "") {
     http_response_code(400);
-    echo json_encode(["error" => "Veuillez remplir tous les champs obligatoires."]);
+    echo json_encode(["error" => "Champs obligatoires manquants."]);
     exit;
 }
-
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(["error" => "Email invalide."]);
-    exit;
-}
-
  
-session_start();
-if (isset($_SESSION["last_submit"]) && time() - $_SESSION["last_submit"] < 10) {
-    http_response_code(429);
-    echo json_encode(["error" => "Vous envoyez trop vite. Réessayez dans quelques secondes."]);
-    exit;
-}
-$_SESSION["last_submit"] = time();
-
 try {
-     
     $pdo = new PDO("mysql:host=localhost;dbname=contact_form;charset=utf8", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  
-    $stmt = $pdo->prepare("INSERT INTO messages 
-        (name, email, service, message, company, phone, budget)
-        VALUES (?, ?, ?, ?, ?, ?, ?)"
-    );
+    $stmt = $pdo->prepare("INSERT INTO messages (name, email, service, message, company, phone, budget) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([$name, $email, $service, $message, $company, $phone, $budget]);
 
-    
-    http_response_code(200);
-    echo json_encode(["success" => "Message enregistré avec succès"]);
+   
+    $to = "ghassendarouich@gmail.com";
+  
+    $subject = "Nouveau contact site web : " . $name;
+ 
+    $body = "Nouveau message reçu !\n\n";
+    $body .= "Nom : $name\n";
+    $body .= "Email Client : $email\n";
+    $body .= "Message : \n$message\n";
+
+  
+    $headers = "From: ghassendarouich@gmail.com\r\n";
+ 
+    $headers .= "Reply-To: " . $email . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    if (mail($to, $subject, $body, $headers)) {
+        echo json_encode(["success" => "Message enregistré et email envoyé !"]);
+    } else {
+        echo json_encode(["success" => "Message enregistré (mais échec envoi mail local)."]);
+    }
 
 } catch (Exception $e) {
     http_response_code(500);
-    error_log("DB Error: " . $e->getMessage());
-    echo json_encode(["error" => "Erreur lors de l'enregistrement : " . $e->getMessage()]);
-    exit;
+    echo json_encode(["error" => "Erreur serveur."]);
 }
 ?>
